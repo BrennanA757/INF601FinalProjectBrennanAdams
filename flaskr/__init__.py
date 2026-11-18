@@ -29,8 +29,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import order
-    app.register_blueprint(order.bp)
+    from . import route
+    app.register_blueprint(route.bp)
     app.add_url_rule('/', endpoint="index")
 
     return app

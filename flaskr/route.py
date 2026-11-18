@@ -1,0 +1,110 @@
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, url_for
+)
+from werkzeug.exceptions import abort
+
+from flaskr.auth import login_required
+from flaskr.db import get_db
+
+import os
+import requests
+
+bp = Blueprint('route', __name__)
+
+url = "https://www.googleapis.com"
+params={
+    "q": "python programming",
+    "key": os.environ["API_KEY"]
+}
+
+
+@bp.route('/')
+def index():
+    response = requests.get(f"{url}/books/v1/volumes", params=params)
+    books = []
+    if(response.ok and response.text):
+        data = response.json()
+        for book in data.get("items", []):
+            info=book["volumeInfo"]["title"]
+            books.append(info)
+
+    return render_template('index/index.html', books=books)
+
+# @bp.route('/orders', methods=('GET', 'POST'))
+# @login_required
+# def create():
+#     if request.method == 'POST':
+#         item1 = request.form['item1']
+#         item2 = request.form['item2']
+#         item3 = request.form['item3']
+#         cost = request.form['total']
+#         error = None
+
+#         if error is not None:
+#             flash(error)
+
+#         else:
+#             db = get_db()
+#             db.execute(
+#                 'INSERT INTO "order" (customerId, cost, item1Quantity, item2Quantity, item3Quantity)'
+#                 ' VALUES (?, ?, ?, ?, ?)',
+#                 (g.user['customerID'], cost, int(item1), int(item2), int(item3))
+#             )
+#             db.commit()
+#             return redirect(url_for('orders.index'))
+
+#     return render_template('orders/create.html')
+
+
+# def get_order(id, check_author=True):
+#     order = get_db().execute(
+#         'SELECT o.id, o.customerID, o.cost, o.createdAt, o.item1Quantity, o.item2Quantity, o.item3Quantity'
+#         ' FROM "order" o JOIN user u ON o.customerID = u.customerID'
+#         ' WHERE o.customerID = ?',
+#         (id,)
+#     ).fetchone()
+
+#     if order is None:
+#         abort(404, f"Order id {id} doesn't exist.")
+
+#     if check_author and order['customerID'] != g.user['customerID']:
+#         abort(403)
+
+#     return order
+
+
+# @bp.route('/<int:id>/update', methods=('GET', 'POST'))
+# @login_required
+# def update(id):
+#     order = get_order(id)
+
+#     if request.method == 'POST':
+#         item1 = request.form['item1']
+#         item2 = request.form['item2']
+#         item3 = request.form['item3']
+#         total = request.form['total']
+#         error = None
+
+#         if error is not None:
+#             flash(error)
+#         else:
+#             db = get_db()
+#             db.execute(
+#                 'UPDATE "order" SET cost = ?, item1Quantity = ?, item2Quantity = ?, item3Quantity = ?'
+#                 ' WHERE customerID = ?',
+#                 (total, item1, item2, item3, id)
+#             )
+#             db.commit()
+#             return redirect(url_for('orders.index'))
+
+#     return render_template('orders/update.html', order=order)
+
+
+# @bp.route('/<int:id>/delete', methods=('POST',))
+# @login_required
+# def delete(id):
+#     get_order(id)
+#     db = get_db()
+#     db.execute('DELETE FROM "order" WHERE customerID = ?', (id,))
+#     db.commit()
+#     return redirect(url_for('orders.index'))

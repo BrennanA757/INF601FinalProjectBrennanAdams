@@ -6,13 +6,3 @@ CREATE TABLE user (
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
-
-CREATE TABLE "order" (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    customerID INTEGER NOT NULL,
-    cost FLOAT NOT NULL,
-    item1Quantity INTEGER NOT NULL,
-    item2Quantity INTEGER NOT NULL,
-    item3Quantity INTEGER NOT NULL,
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-)

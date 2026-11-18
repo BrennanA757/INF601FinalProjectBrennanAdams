@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+<!doctype html>
+<title>{% block title %}Books{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='bootstrap.min.css') }}"
+/>
+
+{% block content %}
+<html lang="en">
+  <body>
+    <p>books view</p>
+    <ul>
+      {% for book in books %}
+        <li>{{ book }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
+{% endblock %}
