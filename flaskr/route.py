@@ -22,13 +22,26 @@ params={
 def index():
     response = requests.get(f"{url}/books/v1/volumes", params=params)
     books = []
+    image_urls = []
     if(response.ok and response.text):
         data = response.json()
         for book in data.get("items", []):
-            info=book["volumeInfo"]["title"]
+            volume_info = book["volumeInfo"]
+            info=volume_info["title"]
             books.append(info)
 
-    return render_template('index/index.html', books=books)
+            image_url=""
+            if(volume_info["imageLinks"]!=None):
+                if(volume_info["imageLinks"]["thumbnail"] != None):
+                    image_url=volume_info["imageLinks"]["thumbnail"]
+                elif(volume_info["imageLinks"]["smallThumbnail"]!=None):
+                    image_url=volume_info["imageLinks"]["thumbnail"]
+
+            if(image_url!=""):
+                image_urls.append(image_url)
+            
+
+    return render_template('index/index.html', books=books, image_urls=image_urls)
 
 # @bp.route('/orders', methods=('GET', 'POST'))
 # @login_required
