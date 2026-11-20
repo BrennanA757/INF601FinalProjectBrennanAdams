@@ -4,7 +4,6 @@ html {
   padding: 1rem;
 }
 body {
-  max-width: 960px;
   margin: 0 auto;
   background: white;
 }
@@ -41,7 +40,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 90vw;
+  width: 100vw;
 
   gap: 3px;
 }
