@@ -8,6 +8,8 @@ body {
   background: white;
 }
 
+
+
 .book_display{
   display: flex;
   flex-direction: column;
@@ -18,15 +20,22 @@ body {
   width: 14rem;
   overflow: hidden;
   white-space: pre-line;
+
+  background-color: rgb(221, 221, 221);
+  border-radius: 5px;
+
+  position: relative;
 }
 .book_display img{
   object-fit: cover;
+
+  margin-top: 15px;
   height: 190px;
 
   flex-shrink: 0;
 }
 .book_display p{
-  font-size: 1.1rem;
+  font-size: 1rem;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -35,6 +44,30 @@ body {
 
   padding: 5px;
 }
+.edit_btn{
+  position: absolute;
+  top: 5px;
+  left: 5px;
+
+  display: inline-flex;
+  align-items: center;
+
+  height: 32px;
+  width: 32px;
+
+  padding: 0;
+
+  cursor: pointer;
+}
+.edit_btn img{
+  max-height: 100%;
+  max-width: 100%;
+
+  inset: 0; /* Centers the image inside the button */
+  margin: auto;
+}
+
+
 
 #books_container{
   display: flex;
