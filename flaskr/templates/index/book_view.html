@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+<!doctype html>
+<title>{% block title %}Book Manager{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='bootstrap.min.css') }}"
+/>
+
+{% block content %}
+<html lang="en">
+  <body>
+    <p>Book Title: {{ book["volumeInfo"]["title"] }}</p>
+    <p>Book Description: {{ book["volumeInfo"]["description"] }}</p>
+  </body>
+</html>
+{% endblock %}
