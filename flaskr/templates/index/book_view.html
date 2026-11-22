@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
 
 <!doctype html>
-<title>{% block title %}Book Manager{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='bootstrap.min.css') }}"
-/>
-
+<title class="header">{% block title %}Book Manager{% endblock %}</title>
 {% block content %}
 <html lang="en">
-  <body>
-    <p>Book Title: {{ book["volumeInfo"]["title"] }}</p>
-    <p>Book Description: {{ book["volumeInfo"]["description"] }}</p>
-  </body>
+  <section id="book_display_section">
+    <div class="book_review_display">
+      <div id="book_title_img">
+        <p>Book Title: {{ book["volumeInfo"]["title"] }}</p>
+        <img src="{{image_url}}">
+      </div>
+      <section name="description_section" id="description_section">Book Description: {{ book["volumeInfo"]["description"] | safe }}</section>
+    </div>
+
+    <div class="review_section">
+      <input type="text" id="comment_input_area" value="Comment Here">
+    </div>
+  </section>
 </html>
 {% endblock %}
+

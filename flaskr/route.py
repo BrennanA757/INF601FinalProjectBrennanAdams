@@ -35,16 +35,7 @@ def index():
         for book in data.get("items", []):
             books.append(book)
 
-            image_url=""
-            image_links=book["volumeInfo"].get("imageLinks", {})
-
-            if(image_links!={}):
-                thumbnail = image_links.get("thumbnail", {})
-                small_thumbnail = image_links.get("smallThumbnail", {})
-                if(thumbnail != {}):
-                    image_url=thumbnail
-                elif(small_thumbnail!={}):
-                    image_url=small_thumbnail
+            image_url=get_book_img(book)
 
             if(image_url!=""):
                 image_urls.append(image_url)
@@ -64,5 +55,24 @@ def book_view(volume_id):
     if(not response.ok or not response.text):
         abort(404) #Render error template if book retrieval was unsuccessful.
 
+
     book_data=response.json()
-    return render_template('index/book_view.html', book=book_data)
+    image_url=get_book_img(book_data)
+    return render_template('index/book_view.html', book=book_data, image_url=image_url)
+
+
+
+#Helper functions
+def get_book_img(book):
+    image_url=""
+    image_links=book["volumeInfo"].get("imageLinks", {})
+
+    if(image_links!={}):
+        thumbnail = image_links.get("thumbnail", {})
+        small_thumbnail = image_links.get("smallThumbnail", {})
+        if(thumbnail != {}):
+            image_url=thumbnail
+        elif(small_thumbnail!={}):
+            image_url=small_thumbnail
+
+    return image_url
