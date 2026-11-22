@@ -1,10 +1,9 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, render_template, request
 )
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
 
 import os
 import requests
@@ -12,16 +11,22 @@ import requests
 bp = Blueprint('route', __name__)
 
 url = "https://www.googleapis.com/books/v1/volumes"
-params={
-    "q": "python programming",
-    "key": os.environ["API_KEY"]
-}
+key=os.environ["API_KEY"]
 
 
 
-@bp.route('/')
+@bp.route('/', methods=["POST", "GET"])
 @login_required
 def index():
+    item_lookup=""
+    if request.method=="POST":
+        item_lookup=request.form.get('book_lookup')
+    else:
+        item_lookup="Python Programming"
+    params={
+        "key": key,
+        "q": item_lookup
+    }
     response = requests.get(url, params=params)
     books = []
     image_urls = []
@@ -31,13 +36,15 @@ def index():
             books.append(book)
 
             image_url=""
-            image_links=book["volumeInfo"]["imageLinks"]
+            image_links=book["volumeInfo"].get("imageLinks", {})
 
-            if(image_links!=None):
-                if(image_links["thumbnail"] != None):
-                    image_url=image_links["thumbnail"]
-                elif(image_links["smallThumbnail"]!=None):
-                    image_url=image_links["smallThumbnail"]
+            if(image_links!={}):
+                thumbnail = image_links.get("thumbnail", {})
+                small_thumbnail = image_links.get("smallThumbnail", {})
+                if(thumbnail != {}):
+                    image_url=thumbnail
+                elif(small_thumbnail!={}):
+                    image_url=small_thumbnail
 
             if(image_url!=""):
                 image_urls.append(image_url)

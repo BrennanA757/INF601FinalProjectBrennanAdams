@@ -77,3 +77,20 @@ body {
 
   gap: 3px;
 }
+#book_lookup_div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#book_lookup_form{
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
+  margin-bottom: 5px;
+}
+#book_lookup{
+  border: 1px solid black;
+
+  width: 15rem;
+}

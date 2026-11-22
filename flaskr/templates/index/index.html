@@ -2,7 +2,7 @@
 
 <!doctype html>
 <title>{% block title %}Books{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}"/>
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='bootstrap.min.css') }}"
@@ -11,6 +11,14 @@
 {% block content %}
 <html lang="en">
   <body>
+    <div id="book_lookup_div">
+      <form method="post" id="book_lookup_form">
+        <input type="text" id="book_lookup" name="book_lookup" value="python programming" required>
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+
     <div id="books_container">
     {% if books | length > 0 and image_urls | length > 0 %}
     {% for i in range(books | length) %}
