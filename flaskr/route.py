@@ -55,7 +55,8 @@ def book_view(volume_id):
     book_data=response.json()
     image_url=get_book_img(book_data)
     comments=get_book_comments(volume_id)
-    return render_template('index/book_view.html', book=book_data, image_url=image_url, comments=comments)
+    rating=get_book_rating(volume_id)
+    return render_template('index/book_view.html', book=book_data, image_url=image_url, comments=comments, rating=rating)
 
 @bp.route('/book_view/<volume_id>/<user_id>/<username>/comment', methods=["POST"])
 def add_comment(volume_id, user_id, username):
@@ -94,3 +95,9 @@ def get_book_comments(volume_id):
     query='SELECT * FROM comments WHERE volume_id = ?'
     comments=db.execute(query, (volume_id,)).fetchall()
     return comments
+
+def get_book_rating(volume_id):
+    db=get_db()
+    query='SELECT rating FROM ratings WHERE volume_id = ?'
+    rating=db.execute(query, (volume_id,)).fetchone()
+    return rating

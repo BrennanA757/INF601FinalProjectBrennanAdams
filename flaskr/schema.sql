@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS "order";
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS ratings;
 
 CREATE TABLE user (
     customerID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,4 +16,9 @@ CREATE TABLE comments (
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     body TEXT NOT NULL,
     FOREIGN KEY (author_id) REFERENCES user (id)
-)
+);
+
+CREATE TABLE ratings(
+    rating FLOAT NOT NULL,
+    volume_id CHAR NOT NULL
+);

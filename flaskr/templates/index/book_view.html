@@ -6,6 +6,19 @@
 <html lang="en">
   <section id="book_display_section">
     <div class="book_review_display">
+      <div id="rating_bar">
+        {% if rating is none %}
+          <p>No ratings yet.</p>
+        {% else %}
+          {% for i in range(5) %}
+            {% if i <= rating %}
+              <img src="{{ url_for('static', filename='images/star.png') }}" class="empty_star_img" alt="rating_star"></img>
+            {% else %}
+              <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img" alt="rating_star"></img>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
       <div id="book_title_img">
         <p>Book Title: {{ book["volumeInfo"]["title"] }}</p>
         <img src="{{image_url}}">
@@ -33,3 +46,5 @@
 </html>
 {% endblock %}
 
+<a href="https://www.flaticon.com/free-icons/rating" title="rating icons">Rating icons created by pocike - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/awward" title="awward icons">Awward icons created by pocike - Flaticon</a>
