@@ -14,7 +14,20 @@
     </div>
 
     <div class="review_section">
-      <input type="text" id="comment_input_area" value="Comment Here">
+      {% for comment in comments %}
+        <article>
+          <p>{{ comment['body'] }}</p>
+          <small>{{ comment['created'] }}</small>
+        </article>
+        {% else %}
+          <p>No comments yet.</p>
+        {% endfor %}
+
+      <form method="post" action="{{ url_for('route.add_comment', volume_id=book['id'], user_id=g.user['customerID'], username=g.user['username']) }}">
+        <label for="body">Add a comment</label>
+        <textarea type="text" id="body" name="body" value="Comment Here"></textarea>
+        <button type="submit">Comment</button>
+      </form>
     </div>
   </section>
 </html>
