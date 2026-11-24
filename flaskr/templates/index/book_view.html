@@ -12,21 +12,35 @@
         {% else %}
           {% for i in range(5) %}
             {% if i <= rating %}
-              <img src="{{ url_for('static', filename='images/star.png') }}" class="empty_star_img" alt="rating_star"></img>
+              <img src="{{ url_for('static', filename='images/star.png') }}" class="full_star_img star_img" alt="rating_star"></img>
             {% else %}
-              <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img" alt="rating_star"></img>
+              <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img star_img" alt="rating_star"></img>
             {% endif %}
           {% endfor %}
         {% endif %}
       </div>
       <div id="book_title_img">
         <p>Book Title: {{ book["volumeInfo"]["title"] }}</p>
-        <img src="{{image_url}}">
+        <img src="{{image_url}}" id="book_view_img">
       </div>
       <section name="description_section" id="description_section">Book Description: {{ book["volumeInfo"]["description"] | safe }}</section>
     </div>
 
     <div class="review_section">
+      <div id="rating_submission_section">
+        <button type="button" onclick="document.getElementById('rating_window').showModal()">Rate</button>
+        
+        <dialog id="rating_window">
+          <p class="bold">Rate</p>
+          <div id="rating_star_container">
+            {% for i in range(5) %}
+              <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img star_img" alt="{{i}} star">
+            {% endfor %}
+          </div>
+
+          <button type="button" onclick="document.getElementById('rating_window').close()">Submit</button>
+        </dialog>
+      </div>
       {% for comment in comments %}
         <article>
           <p>{{ comment['body'] }}</p>
