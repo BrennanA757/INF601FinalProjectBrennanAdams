@@ -19,6 +19,7 @@ CREATE TABLE comments (
 );
 
 CREATE TABLE ratings(
-    rating FLOAT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ratings TEXT,
     volume_id CHAR NOT NULL
 );

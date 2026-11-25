@@ -8,6 +8,7 @@ from flaskr.auth import login_required
 import os
 import requests
 from flaskr.db import get_db
+import json
 
 bp = Blueprint('route', __name__)
 
@@ -74,6 +75,40 @@ def add_comment(volume_id, user_id, username):
     db.commit()
     return redirect(url_for('route.book_view', volume_id=volume_id))
 
+@bp.route('/book_view/<volume_id>/add_rating', methods=["POST"])
+def add_rating(volume_id):
+    rating=int(request.form["rating"].split()[0])
+    print(f"Selected rating: {rating}")
+
+    db=get_db()
+    db_data=db.execute(
+        'SELECT ratings FROM ratings WHERE volume_id=?',
+        (volume_id,)
+    ).fetchone()
+
+    if(db_data != None):
+        ratings_list=json.loads(db_data["ratings"])
+        ratings=[float(x) for x in ratings_list]
+
+        ratings.append(rating)
+        print(f"Appended rating to ratings: {ratings}")
+
+        db.execute(
+            'UPDATE ratings SET ratings=? WHERE volume_id=?',
+            (json.dumps(ratings), volume_id,)
+        )
+    else:
+        ratings=[rating]
+        print(f"Adding new rating to book: {ratings}")
+        db.execute(
+            'INSERT INTO ratings (ratings, volume_id) VALUES (?, ?)',
+            (json.dumps(ratings), volume_id,)
+        )
+    db.commit()
+
+    return redirect(url_for('route.book_view', volume_id=volume_id))
+
+
 
 #Helper functions
 def get_book_img(book):
@@ -98,6 +133,10 @@ def get_book_comments(volume_id):
 
 def get_book_rating(volume_id):
     db=get_db()
-    query='SELECT rating FROM ratings WHERE volume_id = ?'
-    rating=db.execute(query, (volume_id,)).fetchone()
+    query='SELECT ratings FROM ratings WHERE volume_id = ?'
+    response=db.execute(query, (volume_id,)).fetchone()
+    ratings_list=json.loads(response['ratings'])
+    ratings=[float(x) for x in ratings_list]
+    rating=sum(ratings)/len(ratings_list)
+    print(f"Book rating: {rating}")
     return rating

@@ -10,7 +10,7 @@
         {% if rating is none %}
           <p>No ratings yet.</p>
         {% else %}
-          {% for i in range(5) %}
+          {% for i in range(1, 6) %}
             {% if i <= rating %}
               <img src="{{ url_for('static', filename='images/star.png') }}" class="full_star_img star_img" alt="rating_star"></img>
             {% else %}
@@ -31,14 +31,18 @@
         <button type="button" onclick="document.getElementById('rating_window').showModal()">Rate</button>
         
         <dialog id="rating_window">
-          <p class="bold">Rate</p>
-          <div id="rating_star_container">
-            {% for i in range(5) %}
-              <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img star_img" alt="{{i}} star">
-            {% endfor %}
-          </div>
-
-          <button type="button" onclick="document.getElementById('rating_window').close()">Submit</button>
+          <form method="post" action="{{ url_for('route.add_rating', volume_id=book['id']) }}">
+            <p class="bold">Rate</p>
+            <div id="rating_star_container">
+              {% for i in range(1, 6) %}
+                <label>
+                  <input type="radio" name="rating" value="{{ i }} required">
+                  <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img star_img" alt="{{ i }} star">
+                </label>
+              {% endfor %}
+            </div>
+            <button type="submit">Submit</button>
+          </form>
         </dialog>
       </div>
       {% for comment in comments %}
