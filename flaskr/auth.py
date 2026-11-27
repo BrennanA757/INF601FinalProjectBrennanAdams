@@ -57,7 +57,7 @@ def login():
             error = 'Incorrect password.'
         if error is None and user != None:
             session.clear()
-            session['user_id'] = user['customerID']
+            session['user_id'] = user['user_id']
             return redirect(url_for('index'))
 
         if error != None:
@@ -74,7 +74,7 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM user WHERE customerID = ?', (user_id,)
+            'SELECT * FROM user WHERE user_id = ?', (user_id,)
         ).fetchone()
 
 

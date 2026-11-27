@@ -25,7 +25,7 @@
       <div class="book_display">
         <img src="{{ image_urls[i] }}">
         <p class="book_description">{{ books[i].volumeInfo.description }}</p>
-        <a href="{{ url_for('route.book_view', volume_id=books[i].id)}}" class="edit_btn">
+        <a href="{{ url_for('route.book_view', volume_id=books[i].id, user_id=g.user['user_id']) }}" class="edit_btn">
           <img src="{{ url_for('static', filename='images/edit_pencil.png') }}" alt="Inspect"></img>
         </a>
       </div>

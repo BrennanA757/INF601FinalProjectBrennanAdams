@@ -76,11 +76,15 @@ title{
   cursor: pointer;
 }
 .star_img:hover,
+.star_img:has(~ .star_img:checked)
 .star_img:has(~ .star_img:hover){
   content: url(images/star.png);
 }
 .bold{
   font-weight: bold;
+}
+.input_radio{
+  content: hidden;
 }
 
 
