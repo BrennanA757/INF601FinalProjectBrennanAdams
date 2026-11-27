@@ -36,7 +36,7 @@
             <p class="bold">Rate</p>
             <div id="rating_star_container">
               {% for i in range(1, 6) %}
-                <label>
+                <label class="star_label">
                   <input type="radio" name="rating" class="input_radio" value="{{ i }} required">
                   <img src="{{ url_for('static', filename='images/empty_star.png') }}" class="empty_star_img star_img" alt="{{ i }} star">
                 </label>
@@ -46,6 +46,7 @@
           </form>
         </dialog>
       </div>
+
       {% for comment in comments %}
         <article>
           <p>{{ comment['body'] }}</p>
@@ -62,6 +63,26 @@
       </form>
     </div>
   </section>
+
+  <script>
+    const star_labels=document.querySelectorAll(".star_label");
+    star_labels.forEach((label, index1)=>{
+      const star=label.querySelector('.star_img');
+      star.addEventListener("click", ()=>{
+        //Add the 'active' class to any star with an index equal to or lower than the clicked star,
+        //and remove the class to any star with an index that is greater
+        star_labels.forEach((label, index2)=>{
+          const star2=label.querySelector(".star_img");
+          if(index1 >= index2){
+            star2.src='../../static/images/star.png';
+          }
+          else{
+            star2.src='../../static/images/empty_star.png';
+          }
+        });
+      });
+    });
+  </script>
 </html>
 {% endblock %}
 

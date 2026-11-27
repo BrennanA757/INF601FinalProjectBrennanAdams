@@ -1,3 +1,6 @@
+:root {
+  --star_img_size: 50px;
+}
 html {
   font-family: sans-serif;
   background: #eee;
@@ -9,6 +12,14 @@ body {
 }
 title{
   grid-area: header;
+}
+input[type="radio"]{
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  pointer-events: none;
 }
 
 
@@ -70,21 +81,13 @@ title{
   margin: auto;
 }
 .star_img{
-  width: 50px;
-  height: 50px;
+  width: var(--star_img_size);
+  height: var(--star_img_size);
 
   cursor: pointer;
 }
-.star_img:hover,
-.star_img:has(~ .star_img:checked)
-.star_img:has(~ .star_img:hover){
-  content: url(images/star.png);
-}
 .bold{
   font-weight: bold;
-}
-.input_radio{
-  content: hidden;
 }
 
 
