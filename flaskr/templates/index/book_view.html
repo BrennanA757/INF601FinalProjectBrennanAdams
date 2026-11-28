@@ -28,8 +28,10 @@
 
     <div class="review_section">
       <div id="rating_submission_section">
-        <button type="button" onclick="document.getElementById('rating_window').showModal()">Rate</button>
-        
+        {% if not has_rated %}
+          <button type="button" onclick="document.getElementById('rating_window').showModal()">Rate</button>
+        {% endif %}
+
         <dialog id="rating_window">
           <button type="button" onclick="document.getElementById('rating_window').close()">X</button>
           <form method="post" action="{{ url_for('route.add_rating', volume_id=book['id'], user_id=g.user['user_id']) }}">

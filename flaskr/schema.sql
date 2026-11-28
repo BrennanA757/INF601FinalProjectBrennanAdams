@@ -22,5 +22,5 @@ CREATE TABLE ratings(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ratings TEXT,
     users_who_have_set_ratings TEXT,
-    volume_id CHAR NOT NULL
+    volume_id TEXT NOT NULL UNIQUE
 );

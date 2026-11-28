@@ -57,7 +57,7 @@ def book_view(volume_id, user_id):
     image_url=get_book_img(book_data)
     comments=get_book_comments(volume_id)
     rating=get_book_rating(volume_id)
-    has_rated=get_has_user_rated(user_id)
+    has_rated=get_has_user_rated(user_id, volume_id)
     return render_template('index/book_view.html', book=book_data, image_url=image_url, comments=comments, rating=rating, has_rated=has_rated)
 
 @bp.route('/book_view/<volume_id>/<user_id>/<username>/comment', methods=["POST"])
@@ -110,7 +110,7 @@ def add_rating(volume_id, user_id):
     #Include user's id to this book's ratings list
     add_user_rating_to_book(volume_id, user_id)
 
-    return redirect(url_for('route.book_view', volume_id=volume_id))
+    return redirect(url_for('route.book_view', volume_id=volume_id, user_id=user_id))
 
 
 
@@ -147,35 +147,48 @@ def get_book_rating(volume_id):
         rating=sum(ratings)/len(ratings_list)
         return rating
 
-def get_has_user_rated(user_id):
+def get_has_user_rated(user_id, volume_id):
     db=get_db()
-    query='SELECT users_who_have_set_ratings FROM ratings'
-    response=db.execute(query).fetchone()
-    print(f"response: {response}")
+    query="SELECT users_who_have_set_ratings FROM ratings WHERE volume_id = ?"
+    response = db.execute(query, (str(volume_id),)).fetchone()
 
-    #If no response, book has no current ratings and thus user has not rated book yet.
-    if(response == None or response['users_who_have_set_ratings'] in (None, "")):
+    if response is None or not response["users_who_have_set_ratings"]:
+        print(f"Unable to find users_who_have_set_ratings list.")
         return False
-    else:
-        response_json=json.loads(response['users_who_have_set_ratings'])
-        print(f"response_json: {response_json}")
-        id_string=str(response_json)
-        print(f"id_string: {id_string}")
-        id_list=id_string.split(',')
-        print(f"id_list: {id_list}")
-        return user_id in id_list
+
+    user_list = json.loads(response["users_who_have_set_ratings"])
+    print(f"user_list: {user_list}")
+    return int(user_id) in user_list
 
 def add_user_rating_to_book(volume_id, user_id):
     db=get_db()
 
-    query='SELECT users_who_have_set_ratings FROM ratings WHERE volume_id=?'
-    response=db.execute(query, (volume_id,))
-    if(response != None and response.get("users_who_have_set_ratings", "") != ""):
-        id_list=response["users_who_have_set_ratings"]
-        new_list=id_list+user_id+','
-        query='UPDATE ratings SET users_who_have_set_ratings TO ? WHERE volume_id=?'
-        response=db.execute(query, (new_list, volume_id,))
+    volume_id=str(volume_id)
+    user_id=int(user_id)
+
+    query="SELECT users_who_have_set_ratings FROM ratings WHERE volume_id = ?"
+    response=db.execute(query, (volume_id,)).fetchone()
+
+    if response is not None:
+        if response["users_who_have_set_ratings"]:
+            user_list=json.loads(response["users_who_have_set_ratings"])
+        else:
+            user_list=[]
+
+        if user_id not in user_list:
+            user_list.append(user_id)
+
+        new_json=json.dumps(user_list)
+        db.execute(
+            "UPDATE ratings SET users_who_have_set_ratings = ? WHERE volume_id = ?",
+            (new_json, volume_id,)
+        )
     else:
-        query='INSERT INTO ratings (users_who_have_set_ratings) VALUES (?) WHERE user_id=?'
-        db.execute(query, (user_id, volume_id,))
+        #No row exists for this book yet: create a new user_id list
+        new_json=json.dumps([user_id])
+        db.execute(
+            "INSERT INTO ratings (users_who_have_set_ratings, volume_id) VALUES (?, ?)",
+            (new_json, volume_id,)
+        )
+
     db.commit()
